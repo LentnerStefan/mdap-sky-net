@@ -1,2 +1,2 @@
-# mdap-store-explorer
+# mdap-sky-net
 Le slackbot pour mettre l'ambiance.
