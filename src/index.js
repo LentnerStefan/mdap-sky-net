@@ -1,12 +1,10 @@
-
-
 import bot from './const/bot.js';
 
-bot.on('start', function () {
-    // more information about additional params https://api.slack.com/methods/chat.postMessage
-    var params = {
-        as_user: true 
-};
-// TODO// Améliorer la dev experience
-bot.postMessageToUser('stefan.lentner', 'le slackbot est mort, vive le slackbot!', params); 
+import Initializer from './utils/initialize';
+
+let userList = Initializer.initializeData().then((parameters) => {
+    console.log("--------\n\n");    
+    console.log("Users :\n", parameters.users);
+    console.log("--------\n :");
+    console.log("Channels :\n", parameters.channels);
 });
