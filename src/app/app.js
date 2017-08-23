@@ -1,44 +1,50 @@
 import Initializer from '../utils/initialize';
 import Methods from '../utils/methods';
+import Prompts from '../utils/prompts';
+import Actions from '../const/actions';
 import _ from 'lodash';
 
-//let users= await Initializer.promiseUsers();
-//console.log('users',users)
+async function promptUser(userList, channelList) {
+    let exit = false;
+    while (!exit) {
+        let action = await Prompts.promptAction();
+        switch (action) {
+            // Show user list
+            case Actions[0]:
+                for (let i = 0; i < userList.length; i++) {
+                    console.log(`${userList[i].name} : ${userList[i].id} 
+-----------------------`)
+                }
+                break;
+            // Show channel list
+            case Actions[1]:
+                for (let i = 0; i < channelList.length; i++) {
+                    console.log(`${channelList[i].name} : ${channelList[i].id} 
+-----------------------`)
+                }
+                break;
+            // Show channel history
+            case Actions[2]:
+                await Methods.showChannelHistory(userList, channelList);
+                break;
+            // Send message
+            case Actions[3]:
+                await Methods.showHallOfFame(userList, channelList);
+                break;
+            // Send message
+            case Actions[5]:
+                await Methods.promptUserAndSendMessage(userList);
+                break;
+            case Actions[7]:
+                exit = true;
+                break;
+            console.log('\n\n\n');
+        }
+    }
+}
 
 Initializer.initializeData().then((data) => {
     let users = data.users;
     let channels = data.channels;
-    Methods.getChannelHistory('C5ANMEJG2').then(messageList => {
-        for (var i = 0; i < users.length; i++) {
-            for (var j = 0; j < messageList.length; j++) {
-                if(users[i].usrId===messageList[j].usrId){
-                    if(messageList[j].text==="Bonjour"||messageList[j].text==="bonjour"){
-                        users[i].stars==undefined?users[i].stars='*':users[i].stars+='*';                     
-                    }
-                }
-            }
-        }
-        users=_.orderBy(users,(usr)=>usr.stars.length,'desc');
-        console.log(`
-        -----------------------------
-        *            HALL           *
-        *             OF            *
-        *            FAME           *
-        -----------------------------
-        `)
-        console.log(users);  
-        // Uncomment to send message to USER
-
-        // Methods.sendMessage('REPLACE BY USERID','Bonjour cher ami');
-        // Methods.sendMessage('REPLACE BY USERID',`
-        // -----------------------------
-        // *            HALL           *
-        // *             OF            *
-        // *            FAME           *
-        // -----------------------------
-        // `);
-        // Methods.sendMessage('REPLACE BY USERID',JSON.stringify(users, null, 4));
-    });
+    promptUser(users, channels);
 });
-
-

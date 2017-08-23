@@ -12,7 +12,9 @@
   "dependencies": {
     "@slack/client": "^3.11.0",
     "babel-polyfill": "^6.26.0",
-    "lodash": "4.17.4"
+    "inquirer": "^3.2.2",
+    "lodash": "4.17.4",
+    "moment": "^2.18.1"
   },
   "devDependencies": {
     "babel-cli": "^6.24.0",

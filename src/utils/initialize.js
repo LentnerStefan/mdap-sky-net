@@ -9,20 +9,9 @@ async function getUsers() {
                 reject(err);
             } else {
                 let users = [];
-                console.log(`
-            *******************
-            -------------------
-            LISTING USERS
-            `)
                 for (let i in info.members) {
-                    users.push({ name: info.members[i].name, usrId: info.members[i].id, stars: '' });
+                    users.push({ name: info.members[i].name, id: info.members[i].id, stars: '' });
                 }
-                console.log(users);
-                console.log(`
-            DONE
-            -------------------
-            *******************
-            `)
                 resolve(users);
             }
         });
@@ -38,28 +27,18 @@ async function getChannels() {
                 reject(err);
             } else {
                 let channels = [];
-                console.log(`
-                *******************
-                -------------------
-                STARTING TO 
-                LIST CHANNELS
-                `)
                 for (let i in info.channels) {
                     channels.push({ name: info.channels[i].name, id: info.channels[i].id });
                 }
-                console.log(channels);
-                console.log(`
-                FINISHED
-                LISTING CHANNELS
-                -------------------
-                *******************
-                `)
                 resolve(channels);
             }
         });
     })
 }
 async function initializeData() {
+    console.log(`Fetching users & channels ...`);
+    console.log(`DONE !
+    `);
     let users = await getUsers();
     let channels = await getChannels();
     return { users, channels }
