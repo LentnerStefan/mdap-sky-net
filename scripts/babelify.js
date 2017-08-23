@@ -1,10 +1,10 @@
 var fs = require('fs');
 var path = require('path');
 var babel = require('babel-core');
-
 var babelOptions = {
     "presets": [
-        "es2015"
+        "es2015",
+        "stage-3"
     ],
     //sourceMaps: 'inline'
     sourceMaps:false
