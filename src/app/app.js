@@ -33,9 +33,12 @@ async function promptUser(userList, channelList) {
                 break;
             // Send message
             case Actions[5]:
-                await Methods.promptUserAndSendMessage(userList);
+                await Methods.sendMessageTo(userList, channelList);
                 break;
-            case Actions[7]:
+            case Actions[6]:
+                await Methods.sendImageTo(userList, channelList);
+                break;
+            case Actions[8]:
                 exit = true;
                 break;
             console.log('\n\n\n');

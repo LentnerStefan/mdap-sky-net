@@ -92,4 +92,42 @@ let promptMsgCount = () => {
 }
 
 
-export default { promptChannel, promptUser, promptMessage, promptAction,promptMsgCount }
+let promptChannelsOrUsers = () => {
+    return new Promise(function (resolve, reject) {
+        inquirer.prompt([
+            {
+                type: 'list',
+                name: 'choice',
+                message: 'Channel or user ?',
+                choices: ['channels','users']
+            },
+        ]).then(function (answers) {
+            resolve(answers.choice)
+        }, (err) => {
+            reject(err)
+        }
+            );
+    })
+}
+
+let promptImageLink = () => {
+    return new Promise(function (resolve, reject) {
+        inquirer.prompt([
+            {
+                type: 'input',
+                name: 'image_link',
+                message: 'Image link ?'
+            },
+        ]).then(function (answers) {
+            resolve(answers.image_link);
+        }, (err) => {
+            reject(err)
+        }
+            );
+    })
+}
+
+
+
+
+export default { promptChannel, promptUser, promptMessage, promptAction,promptMsgCount, promptChannelsOrUsers, promptImageLink }
