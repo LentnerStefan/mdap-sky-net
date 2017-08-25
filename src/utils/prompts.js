@@ -72,4 +72,24 @@ let promptAction = () => {
     })
 }
 
-export default { promptChannel, promptUser, promptMessage, promptAction }
+
+
+let promptMsgCount = () => {
+    return new Promise(function (resolve, reject) {
+        inquirer.prompt([
+            {
+                type: 'input',
+                name: 'count',
+                message: 'How many messages to you want to display ?'
+            },
+        ]).then(function (answers) {
+            resolve(answers.count);
+        }, (err) => {
+            reject(err)
+        }
+            );
+    })
+}
+
+
+export default { promptChannel, promptUser, promptMessage, promptAction,promptMsgCount }

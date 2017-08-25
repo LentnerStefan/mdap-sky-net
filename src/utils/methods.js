@@ -4,21 +4,26 @@ import _ from 'lodash';
 import moment from 'moment';
 
 
-function getChannelHistory(channelId, recursive = false) {
+function getChannelHistory(channelId, recursive = false,messageList=[],latest=Date.now()) {
     return new Promise(function (resolve, reject) {
-        MdapSkyNet.channels.history(channelId, (err, info) => {
+        MdapSkyNet.channels.history(channelId,{count:500,latest:latest}, (err, info) => {
             if (err) {
                 reject(err)
             }
             else {
-                let messageList = [];
                 for (let i = 0; i < info.messages.length; i++) {
                     if (info.messages[i].type === "message") {
                         messageList.push({ usrId: info.messages[i].user, text: info.messages[i].text, date: moment.unix(info.messages[i].ts).format("DD/MM/YYYY HH:mm"), ts: info.messages[i].ts });
                     }
                 }
-                messageList = _.orderBy(messageList, 'ts', 'asc');
-                resolve(messageList);
+                if(info.has_more && recursive ){
+                    let latestMsgTimeStamp=info.messages[info.messages.length-1].ts;
+                    resolve(getChannelHistory(channelId,recursive,messageList,latestMsgTimeStamp));
+                }
+                else{
+                    messageList = _.orderBy(messageList, 'ts', 'asc');
+                    resolve(messageList);
+                }
             }
         })
     });
@@ -47,7 +52,21 @@ async function promptUserAndSendMessage(userList) {
 async function showChannelHistory(userList, channelList) {
     let channelName = await Prompts.promptChannel(channelList);
     let channelIndex = _.findIndex(channelList, (chl) => chl.name === channelName);
-    let channelHistory = await getChannelHistory(channelList[channelIndex].id)
+    let channelHistory = await getChannelHistory(channelList[channelIndex].id,true);
+    let err=true;
+    let count;
+    console.log(`Loaded ${channelHistory.length} messages`);            
+    console.log(`Last message was sent ${moment.unix(channelHistory[channelHistory.length-1].ts).format("DD/MM/YYYY HH:mm")}`);   
+    while(err){
+        count = await Prompts.promptMsgCount();
+        if(!isNaN(count))
+            {
+                err=false;
+            }
+        else{
+            console.log('Try again...')
+        }
+    }
     console.log(`
     ****************
     *              *
@@ -57,13 +76,14 @@ async function showChannelHistory(userList, channelList) {
     ****************
 
 `)
-    for (let i = 0; i < channelHistory.length; i++) {
+    for (let i = channelHistory.length-count-1; i < channelHistory.length-1; i++) {
         let userIndex = _.findIndex(userList, (usr) => usr.id === channelHistory[i].usrId);
         let userName = userList[userIndex].name
         console.log(`${channelHistory[i].date} : ${userName} 
 ${channelHistory[i].text}
 -----------------------`)
     }
+               
 }
 
 
