@@ -1,6 +1,6 @@
 import MdapSkyNet from '../const/bot';
 import _ from 'lodash';
-
+import moment from 'moment';
 
 function getChannelHistory(channelId, recursive = false, messageList = [], latest = Date.now()) {
     return new Promise(function (resolve, reject) {
